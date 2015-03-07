@@ -1,4 +1,4 @@
-﻿/*
+/*
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements. See the NOTICE file
  distributed with this work for additional information
@@ -34,28 +34,36 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveRemoteNotification:)
                                                  name:@"UIApplicationDidReceiveRemoteNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didRegisterUserNotificationSettings:)
+                                                 name:CDVRemoteNotification object:nil];
 }
 
 - (void)registerApplication:(CDVInvokedUrlCommand*)command
 {
     self.notificationHubPath = [command.arguments objectAtIndex:0];
     self.connectionString = [command.arguments objectAtIndex:1];
-    
+
     self.callbackId = command.callbackId;
-    
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes: UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-    
+
+    if (IsAtLeastiOSVersion(@"8.0")) {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert) categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    } else {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes: UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    }
+
 }
 
 - (void)unregisterApplication:(CDVInvokedUrlCommand*)command
 {
     self.callbackId = command.callbackId;
-    
+
     NSString *notificationHubPath = [command.arguments objectAtIndex:0];
     NSString *connectionString = [command.arguments objectAtIndex:1];
-    
+
     SBNotificationHub* hub = [[SBNotificationHub alloc] initWithConnectionString:connectionString notificationHubPath:notificationHubPath];
-    
+
     [hub unregisterNativeWithCompletion:^(NSError* error) {
         if (error != nil) {
             [self failWithError:error];
@@ -63,15 +71,19 @@
         }
         [self reportResult:nil keepCallback:[NSNumber numberWithInteger: FALSE]];
     }];
-    
+
+}
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+{
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
 - (void) didRegisterForRemoteNotificationsWithDeviceToken:(NSNotification *)notif
 {
     if (self.connectionString == nil || self.notificationHubPath == nil) return;
-    
+
     NSData *deviceToken  = notif.object;
-    
+
     SBNotificationHub* hub = [[SBNotificationHub alloc] initWithConnectionString:
                               self.connectionString notificationHubPath:self.notificationHubPath];
 
@@ -80,18 +92,45 @@
             [self failWithError:error];
             return;
         }
-        
+
         // http://stackoverflow.com/a/1587441
         NSString *channelUri = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
         channelUri = [channelUri stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
+
         // create callback argument
         NSMutableDictionary* registration = [NSMutableDictionary dictionaryWithCapacity:4];
         [registration setObject:@"registerApplication" forKey:@"event"];
         [registration setObject:channelUri forKey:@"registrationId"]; // TODO: find the way to report registrationId
         [registration setObject:channelUri forKey:@"channelUri"];
         [registration setObject:self.notificationHubPath forKey:@"notificationHubPath"];
-        
+
+        [self reportResult: registration keepCallback:[NSNumber numberWithInteger: TRUE]];
+    }];
+}
+
+- (void) didRegisterForRemoteNotificationsWithDeviceTokenCordova:(NSNotification *)notif
+{
+    if (self.connectionString == nil || self.notificationHubPath == nil) return;
+
+    NSString *channelUri  = notif.object;
+    NSData *deviceToken  = [channelUri dataUsingEncoding:NSUTF8StringEncoding];
+
+    SBNotificationHub* hub = [[SBNotificationHub alloc] initWithConnectionString:
+                              self.connectionString notificationHubPath:self.notificationHubPath];
+
+    [hub registerNativeWithDeviceToken:deviceToken tags:nil completion:^(NSError* error) {
+        if (error != nil) {
+            [self failWithError:error];
+            return;
+        }
+
+        // create callback argument
+        NSMutableDictionary* registration = [NSMutableDictionary dictionaryWithCapacity:4];
+        [registration setObject:@"registerApplication" forKey:@"event"];
+        [registration setObject:channelUri forKey:@"registrationId"]; // TODO: find the way to report registrationId
+        [registration setObject:channelUri forKey:@"channelUri"];
+        [registration setObject:self.notificationHubPath forKey:@"notificationHubPath"];
+
         [self reportResult: registration keepCallback:[NSNumber numberWithInteger: TRUE]];
     }];
 }
@@ -106,14 +145,14 @@
 {
     NSDictionary* userInfo = notif.object;
     NSDictionary* apsInfo = [userInfo objectForKey:@"aps"];
-    
+
     [self reportResult: apsInfo keepCallback:[NSNumber numberWithInteger: TRUE]];
 }
 
 -(void)reportResult:(NSDictionary*)result keepCallback:(NSNumber*)keepCalback
 {
     if (self.callbackId == nil) return;
-    
+
     CDVPluginResult* pluginResult;
     if (result != nil)
     {
@@ -123,17 +162,17 @@
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
     pluginResult.keepCallback = keepCalback;
-    
+
     [self success:pluginResult callbackId:self.callbackId];
 }
 
 -(void)failWithError:(NSError *)error
 {
     if (self.callbackId == nil) return;
-    
+
     NSString *errorMessage = [error localizedDescription];
     CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMessage];
-    
+
     [self.commandDelegate sendPluginResult:commandResult callbackId:self.callbackId];
 }
 

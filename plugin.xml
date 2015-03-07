@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 xmlns:android="http://schemas.android.com/apk/res/android"
            id="msopentech.azure.NotificationHub.Extended"
-      version="0.0.1">
+      version="0.0.6">
     <name>Azure Notification Hub</name>
 
     <description>Cordova Azure Notification Hub Plugin</description>
@@ -33,13 +33,13 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     </platform>
 
     <!-- windows8 -->
-    <platform name="windows8">
+    <!-- <platform name="windows8">
         <framework src="src/windows8/Microsoft.WindowsAzure.Messaging.Managed.dll" custom="true"/>
         <framework src="src/windows8/NotificationHubRuntimeProxy.winmd" custom="true"/>
         <js-module src="src/windows8/NotificationHubProxy.js" name="NotificationHubProxy" >
             <clobbers target="" />
         </js-module>
-    </platform>
+    </platform> -->
 
     <!-- android -->
     <platform name="android">
@@ -49,8 +49,8 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             </feature>
         </config-file>
 
-        <lib-file src="src/android/google-play-services.jar" />
-        <lib-file src="src/android/notification-hubs-0.1.jar" />
+        <lib-file src="src/android/libs/google-play-services.jar" />
+        <lib-file src="src/android/libs/notification-hubs-0.1.jar" />
 
         <source-file src="src/android/NotificationHub.java" target-dir="src/msopentech/azure" />
 
@@ -63,7 +63,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 <param name="ios-package" value="NotificationHub" />
             </feature>
         </config-file>
+        <header-file src="src/ios/AppDelegate+NotificationHub.h" />
         <header-file src="src/ios/NotificationHub.h" />
+        <source-file src="src/ios/AppDelegate+NotificationHub.m" />
         <source-file src="src/ios/NotificationHub.m" />
         <framework src="src/ios/WindowsAzureMessaging.framework" custom="true" />
     </platform>
