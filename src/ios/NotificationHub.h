@@ -25,7 +25,6 @@
 @property NSString *callbackId;
 @property NSString *notificationHubPath;
 @property NSString *connectionString;
-@property NSString *userId;
 
 // Asynchronously registers the device for native notifications.
 - (void)registerApplication:(CDVInvokedUrlCommand*)command;

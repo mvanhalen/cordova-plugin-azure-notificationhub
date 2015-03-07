@@ -42,7 +42,6 @@ namespace Cordova.Extension.Commands
 
                 var notificationHubPath = args[0];
                 var connectionString = args[1];
-                var userId = args[3];
                 this.pushNotificationCallback = args[2];
 
                 if (string.IsNullOrEmpty(notificationHubPath))
@@ -67,17 +66,17 @@ namespace Cordova.Extension.Commands
                 if (channel == null)
                 {
                     channel = new HttpNotificationChannel(PluginChannelId);
-                    channel.ChannelUriUpdated += (o, res) => CompleteApplicationRegistration(res.ChannelUri.ToString(), notificationHubPath, connectionString, userId);
+                    channel.ChannelUriUpdated += (o, res) => CompleteApplicationRegistration(res.ChannelUri.ToString(), notificationHubPath, connectionString);
                     channel.Open();
                     channel.BindToShellToast();
                 }
                 else
                 {
-                    CompleteApplicationRegistration(channel.ChannelUri.ToString(), notificationHubPath, connectionString, userId);
+                    CompleteApplicationRegistration(channel.ChannelUri.ToString(), notificationHubPath, connectionString);
                 }
 
                 channel.ShellToastNotificationReceived += PushChannel_ShellToastNotificationReceived;
-
+                
             }
             catch (Exception ex)
             {
@@ -121,13 +120,13 @@ namespace Cordova.Extension.Commands
             }
         }
 
-        private async void CompleteApplicationRegistration(string channelUri, string notificationHubPath, string connectionString, string userId)
+        private async void CompleteApplicationRegistration(string channelUri, string notificationHubPath, string connectionString)
         {
             try
             {
                 var hub = new Microsoft.WindowsAzure.Messaging.NotificationHub(notificationHubPath, connectionString);
-                var registration = await hub.RegisterNativeAsync(channelUri, new string[] { userId });
-
+                var registration = await hub.RegisterNativeAsync(channelUri);
+                
                 var regInfo = new RegisterResult();
                 regInfo.RegistrationId = registration.RegistrationId;
                 regInfo.ChannelUri = registration.ChannelUri;
@@ -143,7 +142,7 @@ namespace Cordova.Extension.Commands
 
         void PushChannel_ShellToastNotificationReceived(object sender, NotificationEventArgs e)
         {
-
+            
             // if there is no js handler
             if (this.pushNotificationCallback == null) return;
 
