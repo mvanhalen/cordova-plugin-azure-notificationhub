@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="msopentech.azure.NotificationHub.Extended"
-        version="0.0.7">
+        version="0.0.8">
 
   <name>Azure Notification Hub</name>
 
@@ -35,15 +35,6 @@
     <source-file src="src/wp/NotificationHub.cs" />
   </platform>
 
-  <!-- windows8
-  <platform name="windows8">
-    <framework src="src/windows8/Microsoft.WindowsAzure.Messaging.Managed.dll" custom="true"/>
-    <framework src="src/windows8/NotificationHubRuntimeProxy.winmd" custom="true"/>
-    <js-module src="src/windows8/NotificationHubProxy.js" name="NotificationHubProxy" >
-      <clobbers target="" />
-    </js-module>
-  </platform>-->
-
   <!-- android -->
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">
@@ -74,7 +65,7 @@
 
     <lib-file src="src/android/libs/google-play-services.jar" />
     <lib-file src="src/android/libs/notification-hubs-0.1.jar" />
-    <!--<source-file src="src/android/libs/gcm.jar" target-dir="libs/" />-->
+
 
   </platform>
   <!-- ios -->
