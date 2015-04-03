@@ -19,7 +19,7 @@ import com.microsoft.windowsazure.notifications.NotificationsManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
+
 
 /**
  * Apache Cordova plugin for Windows Azure Notification Hub
@@ -78,14 +78,12 @@ public class NotificationHub extends CordovaPlugin {
 
                       NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
 
-                      registerWithNotificationHubs();
-
                       String regid = gcm.register(senderId);
                       Registration registrationInfo = hub.register(regid);
 
                       JSONObject registrationResult = new JSONObject();
                       registrationResult.put("registrationId", registrationInfo.getRegistrationId());
-                      registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
+                      //registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
                       registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
                       registrationResult.put("event", "registerApplication");
 
@@ -140,7 +138,7 @@ public class NotificationHub extends CordovaPlugin {
 
     }
 
-    private void sendNotification(String msg) {
+    private static void sendNotification(String msg) {
         mNotificationManager = (NotificationManager)
                   ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
