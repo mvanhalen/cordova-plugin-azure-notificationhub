@@ -19,7 +19,7 @@ import com.microsoft.windowsazure.notifications.NotificationsManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.os.Bundle;
-
+import android.support.v4.app.NotificationCompat;
 
 /**
  * Apache Cordova plugin for Windows Azure Notification Hub
@@ -121,7 +121,7 @@ public class NotificationHub extends CordovaPlugin {
     /**
      * Handles push notifications received.
      */
-    public static class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
+    public class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
 
       public static final int NOTIFICATION_ID = 1;
       private NotificationManager mNotificationManager;
@@ -138,9 +138,8 @@ public class NotificationHub extends CordovaPlugin {
 
     }
 
-    private static void sendNotification(String msg) {
-        mNotificationManager = (NotificationManager)
-                  ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+    private void sendNotification(String msg) {
+        mNotificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
               new Intent(ctx, MainActivity.class), 0);
