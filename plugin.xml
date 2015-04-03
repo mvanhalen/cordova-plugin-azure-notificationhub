@@ -3,15 +3,15 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="msopentech.azure.NotificationHub.Extended"
-        version="0.1.1">
+        version="0.1.2">
 
   <name>Azure Notification Hub</name>
 
   <description>Cordova Azure Notification Hub Plugin</description>
   <license>Apache 2.0</license>
   <keywords>cordova, azure, push, notifications, hub</keywords>
-  <repo>https://github.com/PhonegapProjects/cordova-plugin-azure-notificationhub/</repo>
-  <issue>https://github.com/PhonegapProjects/cordova-plugin-azure-notificationhub/issues</issue>
+  <repo>https://github.com/mvanhalen/cordova-plugin-azure-notificationhub/</repo>
+  <issue>https://github.com/mvanhalen/cordova-plugin-azure-notificationhub//issues</issue>
 
   <js-module src="www/Promise.js" name="Promise"/>
 
@@ -61,8 +61,6 @@
           <category android:name="$PACKAGE_NAME" />
         </intent-filter>
       </receiver> -->
-      <meta-data android:name="com.google.android.gms.version"
-    android:value="@integer/google_play_services_version" />
       <receiver android:name="com.microsoft.windowsazure.notifications.NotificationsBroadcastReceiver"
       android:permission="com.google.android.c2dm.permission.SEND">
       <intent-filter>
