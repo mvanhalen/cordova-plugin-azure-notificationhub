@@ -12,9 +12,10 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import com.google.android.gms.gcm.*
+import com.microsoft.windowsazure.messaging.*;
+import com.microsoft.windowsazure.notifications.NotificationsManager;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.microsoft.windowsazure.messaging.NativeRegistration;
 
 /**
  * Apache Cordova plugin for Windows Azure Notification Hub
@@ -30,23 +31,23 @@ public class NotificationHub extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         _callbackContext = callbackContext;
         try {
-            
-            if (action.equals("registerApplication")) {   
+
+            if (action.equals("registerApplication")) {
                     String hubName = args.getString(0);
                     String connectionString = args.getString(1);
                     String senderId = args.getString(4);
                     registerApplication(hubName, connectionString, senderId);
                     return true;
             }
-            
+
             if (action.equals("unregisterApplication")) {
                 String hubName = args.getString(0);
                 String connectionString = args.getString(1);
                 unregisterApplication(hubName, connectionString);
                 return true;
-            } 
-            
-            return false; // invalid action            
+            }
+
+            return false; // invalid action
         } catch (Exception e) {
             _callbackContext.error(e.getMessage());
         }
@@ -70,19 +71,19 @@ public class NotificationHub extends CordovaPlugin {
                    try {
                       String gcmId = gcm.register(senderId);
                       NativeRegistration registrationInfo = hub.register(gcmId);
-                      
+
                       JSONObject registrationResult = new JSONObject();
                       registrationResult.put("registrationId", registrationInfo.getRegistrationId());
                       registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
                       registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
                       registrationResult.put("event", "registerApplication");
-                      
+
                       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, registrationResult);
                       // keepKallback is used to continue using the same callback to notify about push notifications received
-                      pluginResult.setKeepCallback(true); 
-                      
+                      pluginResult.setKeepCallback(true);
+
                       NotificationHub.getCallbackContext().sendPluginResult(pluginResult);
-                      
+
                    } catch (Exception e) {
                        NotificationHub.getCallbackContext().error(e.getMessage());
                    }
@@ -99,15 +100,15 @@ public class NotificationHub extends CordovaPlugin {
      */
     private void unregisterApplication(final String hubName, final String connectionString) {
         try {
-            final com.microsoft.windowsazure.messaging.NotificationHub hub = 
+            final com.microsoft.windowsazure.messaging.NotificationHub hub =
                     new com.microsoft.windowsazure.messaging.NotificationHub(hubName, connectionString, cordova.getActivity());
             hub.unregister();
-            NotificationHub.getCallbackContext().success();            
+            NotificationHub.getCallbackContext().success();
         } catch (Exception e) {
             NotificationHub.getCallbackContext().error(e.getMessage());
         }
     }
-    
+
     /**
      * Handles push notifications received.
      */
@@ -115,13 +116,13 @@ public class NotificationHub extends CordovaPlugin {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            
+
             if (NotificationHub.getCallbackContext() == null){
                 return;
-            }                                    
+            }
             JSONObject json = new JSONObject();
             try {
-                
+
                 Set<String> keys = intent.getExtras().keySet();
                 for (String key : keys) {
                     json.put(key, intent.getExtras().get(key));
@@ -133,9 +134,9 @@ public class NotificationHub extends CordovaPlugin {
                 e.printStackTrace();
             }
         }
-        
+
     }
-    
+
     /**
      * Returns plugin callback.
      */

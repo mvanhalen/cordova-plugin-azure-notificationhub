@@ -54,14 +54,25 @@
     </config-file>
 
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <receiver android:name="msopentech.azure.NotificationHub$PushNotificationReceiver"
+      <!-- <receiver android:name="msopentech.azure.NotificationHub$PushNotificationReceiver"
           android:permission="com.google.android.c2dm.permission.SEND">
         <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE" />
           <category android:name="$PACKAGE_NAME" />
         </intent-filter>
-      </receiver>
+      </receiver> -->
+      <meta-data android:name="com.google.android.gms.version"
+    android:value="@integer/google_play_services_version" />
+      <receiver android:name="com.microsoft.windowsazure.notifications.NotificationsBroadcastReceiver"
+      android:permission="com.google.android.c2dm.permission.SEND">
+      <intent-filter>
+          <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+          <category android:name="$PACKAGE_NAME" />
+      </intent-filter>
+    </receiver>
     </config-file>
+
+
 
     <source-file src="src/android/NotificationHub.java" target-dir="src/msopentech/azure" />
 
