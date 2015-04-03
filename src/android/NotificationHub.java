@@ -118,17 +118,19 @@ public class NotificationHub extends CordovaPlugin {
         }
     }
 
-    public static final int NOTIFICATION_ID = 1;
-    private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
-    Context ctx;
+
 
     /**
      * Handles push notifications received.
      */
-    public class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
+    public static class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
 
-        @Override
+      public static final int NOTIFICATION_ID = 1;
+      private NotificationManager mNotificationManager;
+      NotificationCompat.Builder builder;
+      Context ctx;
+
+        //@Override
         public void onReceive(Context context, Intent intent) {
             ctx = context;
             String nhMessage = intent.getExtras().getString("msg");
@@ -151,25 +153,24 @@ public class NotificationHub extends CordovaPlugin {
             }
         }
 
-    }
+        private void sendNotification(String msg) {
+            mNotificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-    private void sendNotification(String msg) {
-        mNotificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
+                    new Intent(ctx, PushNotificationReceiver.class), 0);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-                new Intent(ctx, PushNotificationReceiver.class), 0);
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(ctx)
+                            .setContentTitle("Notification Hub Demo")
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(msg))
+                            .setContentText(msg);
+            //.setSmallIcon(R.drawable.ic_launcher)
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(ctx)
-                        .setContentTitle("Notification Hub Demo")
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg);
-        //.setSmallIcon(R.drawable.ic_launcher)
-
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-    }
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        }
+  }
     /**
      * Returns plugin callback.
      */
