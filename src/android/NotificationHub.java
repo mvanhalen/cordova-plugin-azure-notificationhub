@@ -129,11 +129,26 @@ public class NotificationHub extends CordovaPlugin {
     public class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
 
         @Override
-        public void onReceive(Context context, Bundle bundle) {
+        public void onReceive(Context context, Intent intent) {
              ctx = context;
-             String nhMessage = bundle.getString("msg");
+             String nhMessage = intent.getExtras().get("msg");
+             //bundle.getString("msg");
 
              sendNotification(nhMessage);
+
+             JSONObject json = new JSONObject();
+             try {
+
+                 Set<String> keys = intent.getExtras().keySet();
+                 for (String key : keys) {
+                     json.put(key, intent.getExtras().get(key));
+                 }
+                 PluginResult result = new PluginResult(PluginResult.Status.OK, json);
+                 result.setKeepCallback(true);
+                 NotificationHub.getCallbackContext().sendPluginResult(result);
+             } catch (JSONException e) {
+                 e.printStackTrace();
+             }
         }
 
     }
@@ -151,7 +166,7 @@ public class NotificationHub extends CordovaPlugin {
                          .bigText(msg))
               .setContentText(msg);
               //.setSmallIcon(R.drawable.ic_launcher)
-              
+
          mBuilder.setContentIntent(contentIntent);
          mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
