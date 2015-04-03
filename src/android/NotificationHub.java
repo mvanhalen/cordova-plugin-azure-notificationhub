@@ -38,11 +38,11 @@ public class NotificationHub extends CordovaPlugin {
         try {
 
             if (action.equals("registerApplication")) {
-                    String hubName = args.getString(0);
-                    String connectionString = args.getString(1);
-                    String senderId = args.getString(4);
-                    registerApplication(hubName, connectionString, senderId);
-                    return true;
+                String hubName = args.getString(0);
+                String connectionString = args.getString(1);
+                String senderId = args.getString(4);
+                registerApplication(hubName, connectionString, senderId);
+                return true;
             }
 
             if (action.equals("unregisterApplication")) {
@@ -73,32 +73,32 @@ public class NotificationHub extends CordovaPlugin {
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... params) {
-                   try {
+                    try {
 
 
-                      NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
+                        NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
 
-                      String regid = gcm.register(senderId);
-                      Registration registrationInfo = hub.register(regid);
+                        String regid = gcm.register(senderId);
+                        Registration registrationInfo = hub.register(regid);
 
-                      JSONObject registrationResult = new JSONObject();
-                      registrationResult.put("registrationId", registrationInfo.getRegistrationId());
-                      //registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
-                      registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
-                      registrationResult.put("event", "registerApplication");
+                        JSONObject registrationResult = new JSONObject();
+                        registrationResult.put("registrationId", registrationInfo.getRegistrationId());
+                        //registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
+                        registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
+                        registrationResult.put("event", "registerApplication");
 
-                      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, registrationResult);
-                      // keepKallback is used to continue using the same callback to notify about push notifications received
-                      pluginResult.setKeepCallback(true);
+                        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, registrationResult);
+                        // keepKallback is used to continue using the same callback to notify about push notifications received
+                        pluginResult.setKeepCallback(true);
 
-                      NotificationHub.getCallbackContext().sendPluginResult(pluginResult);
+                        NotificationHub.getCallbackContext().sendPluginResult(pluginResult);
 
-                   } catch (Exception e) {
-                       NotificationHub.getCallbackContext().error(e.getMessage());
-                   }
-                   return null;
-               }
-             }.execute(null, null, null);
+                    } catch (Exception e) {
+                        NotificationHub.getCallbackContext().error(e.getMessage());
+                    }
+                    return null;
+                }
+            }.execute(null, null, null);
         } catch (Exception e) {
             NotificationHub.getCallbackContext().error(e.getMessage());
         }
@@ -130,25 +130,25 @@ public class NotificationHub extends CordovaPlugin {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-             ctx = context;
-             String nhMessage = intent.getExtras().get("msg");
-             //bundle.getString("msg");
+            ctx = context;
+            String nhMessage = intent.getExtras().getString("msg");
+            //bundle.getString("msg");
 
-             sendNotification(nhMessage);
+            sendNotification(nhMessage);
 
-             JSONObject json = new JSONObject();
-             try {
+            JSONObject json = new JSONObject();
+            try {
 
-                 Set<String> keys = intent.getExtras().keySet();
-                 for (String key : keys) {
-                     json.put(key, intent.getExtras().get(key));
-                 }
-                 PluginResult result = new PluginResult(PluginResult.Status.OK, json);
-                 result.setKeepCallback(true);
-                 NotificationHub.getCallbackContext().sendPluginResult(result);
-             } catch (JSONException e) {
-                 e.printStackTrace();
-             }
+                Set<String> keys = intent.getExtras().keySet();
+                for (String key : keys) {
+                    json.put(key, intent.getExtras().get(key));
+                }
+                PluginResult result = new PluginResult(PluginResult.Status.OK, json);
+                result.setKeepCallback(true);
+                NotificationHub.getCallbackContext().sendPluginResult(result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -157,18 +157,18 @@ public class NotificationHub extends CordovaPlugin {
         mNotificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-              new Intent(ctx, PushNotificationReceiver.class), 0);
+                new Intent(ctx, PushNotificationReceiver.class), 0);
 
         NotificationCompat.Builder mBuilder =
-              new NotificationCompat.Builder(ctx)
-              .setContentTitle("Notification Hub Demo")
-              .setStyle(new NotificationCompat.BigTextStyle()
-                         .bigText(msg))
-              .setContentText(msg);
-              //.setSmallIcon(R.drawable.ic_launcher)
+                new NotificationCompat.Builder(ctx)
+                        .setContentTitle("Notification Hub Demo")
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(msg))
+                        .setContentText(msg);
+        //.setSmallIcon(R.drawable.ic_launcher)
 
-         mBuilder.setContentIntent(contentIntent);
-         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
     /**
      * Returns plugin callback.
