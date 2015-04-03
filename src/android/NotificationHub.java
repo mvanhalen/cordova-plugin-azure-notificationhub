@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import com.google.android.gms.gcm.*
+import com.google.android.gms.gcm.*;
 import com.microsoft.windowsazure.messaging.*;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
@@ -62,7 +62,7 @@ public class NotificationHub extends CordovaPlugin {
 
         try {
             final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(cordova.getActivity());
-            final com.microsoft.windowsazure.messaging.NotificationHub hub = 
+            final com.microsoft.windowsazure.messaging.NotificationHub hub =
                     new com.microsoft.windowsazure.messaging.NotificationHub(hubName, connectionString, cordova.getActivity());
 
             new AsyncTask() {
