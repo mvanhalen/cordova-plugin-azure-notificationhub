@@ -16,11 +16,16 @@ import com.google.android.gms.gcm.*;
 import com.microsoft.windowsazure.messaging.*;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 
 /**
  * Apache Cordova plugin for Windows Azure Notification Hub
  */
 public class NotificationHub extends CordovaPlugin {
+
 
     /**
      * The callback context from which we were invoked.
@@ -69,8 +74,14 @@ public class NotificationHub extends CordovaPlugin {
                 @Override
                 protected Object doInBackground(Object... params) {
                    try {
-                      String gcmId = gcm.register(senderId);
-                      NativeRegistration registrationInfo = hub.register(gcmId);
+
+
+                      NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
+
+                      registerWithNotificationHubs();
+
+                      String regid = gcm.register(senderId);
+                      Registration registrationInfo = hub.register(regid);
 
                       JSONObject registrationResult = new JSONObject();
                       registrationResult.put("registrationId", registrationInfo.getRegistrationId());
@@ -112,31 +123,41 @@ public class NotificationHub extends CordovaPlugin {
     /**
      * Handles push notifications received.
      */
-    public static class PushNotificationReceiver extends android.content.BroadcastReceiver {
+    public static class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
+
+      public static final int NOTIFICATION_ID = 1;
+      private NotificationManager mNotificationManager;
+      NotificationCompat.Builder builder;
+      Context ctx;
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, Bundle bundle) {
+             ctx = context;
+             String nhMessage = bundle.getString("msg");
 
-            if (NotificationHub.getCallbackContext() == null){
-                return;
-            }
-            JSONObject json = new JSONObject();
-            try {
-
-                Set<String> keys = intent.getExtras().keySet();
-                for (String key : keys) {
-                    json.put(key, intent.getExtras().get(key));
-                }
-                PluginResult result = new PluginResult(PluginResult.Status.OK, json);
-                result.setKeepCallback(true);
-                NotificationHub.getCallbackContext().sendPluginResult(result);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+             sendNotification(nhMessage);
         }
 
     }
 
+    private void sendNotification(String msg) {
+        mNotificationManager = (NotificationManager)
+                  ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
+              new Intent(ctx, MainActivity.class), 0);
+
+        NotificationCompat.Builder mBuilder =
+              new NotificationCompat.Builder(ctx)
+              .setSmallIcon(R.drawable.ic_launcher)
+              .setContentTitle("Notification Hub Demo")
+              .setStyle(new NotificationCompat.BigTextStyle()
+                         .bigText(msg))
+              .setContentText(msg);
+
+         mBuilder.setContentIntent(contentIntent);
+         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
     /**
      * Returns plugin callback.
      */
