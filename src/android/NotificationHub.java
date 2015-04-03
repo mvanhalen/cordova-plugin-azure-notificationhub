@@ -162,7 +162,7 @@ public class NotificationHub extends CordovaPlugin {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(ctx)
                             .setContentTitle("Notification Hub Demo")
-                            .setSmallIcon(R.drawable.ic_plusone_standard_off_client)
+                            .setSmallIcon(R.drawable.icon)
                             .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(msg))
                             .setContentText(msg);
