@@ -172,11 +172,10 @@ public class NotificationHub extends CordovaPlugin {
         }
         private int getDrawableIcon () {
            Context context = ctx.getApplicationContext();
-           Resources res   = context.getResources();
            String pkgName  = context.getPackageName();
 
            int resId;
-           resId = res.getIdentifier("icon", "drawable", pkgName);
+           resId = context.getResources().getIdentifier("icon", "drawable", pkgName);
 
            return resId;
        }
