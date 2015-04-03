@@ -118,15 +118,15 @@ public class NotificationHub extends CordovaPlugin {
         }
     }
 
+    public static final int NOTIFICATION_ID = 1;
+    private NotificationManager mNotificationManager;
+    NotificationCompat.Builder builder;
+    Context ctx;
+
     /**
      * Handles push notifications received.
      */
     public class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
-
-      public static final int NOTIFICATION_ID = 1;
-      private NotificationManager mNotificationManager;
-      NotificationCompat.Builder builder;
-      Context ctx;
 
         @Override
         public void onReceive(Context context, Bundle bundle) {
