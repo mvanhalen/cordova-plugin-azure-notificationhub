@@ -162,7 +162,7 @@ public class NotificationHub extends CordovaPlugin {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(ctx)
                             .setContentTitle("Notification Hub Demo")
-                            .setSmallIcon(ctx.getApplicationContext().getResources().getDrawable(R.drawable.icon))
+                            .setSmallIcon(ctx.getApplicationContext().getResources().getDrawable(getDrawableIcon()))
                             .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(msg))
                             .setContentText(msg);
@@ -170,6 +170,16 @@ public class NotificationHub extends CordovaPlugin {
             mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
+        private int getDrawableIcon () {
+           Context context = cordova.getActivity().getApplicationContext();
+           Resources res   = context.getResources();
+           String pkgName  = context.getPackageName();
+
+           int resId;
+           resId = res.getIdentifier("icon", "drawable", pkgName);
+
+           return resId;
+       }
 
   }
     /**
