@@ -74,13 +74,13 @@ public class NotificationHub extends CordovaPlugin {
             final com.microsoft.windowsazure.messaging.NotificationHub hub =
                     new com.microsoft.windowsazure.messaging.NotificationHub(hubName, connectionString, cordova.getActivity());
 
+                    NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
+
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... params) {
                     try {
 
-
-                        NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
 
                         String regid = gcm.register(senderId);
                         Registration registrationInfo = hub.register(regid);
@@ -88,8 +88,8 @@ public class NotificationHub extends CordovaPlugin {
                         JSONObject registrationResult = new JSONObject();
                         registrationResult.put("registrationId", registrationInfo.getRegistrationId());
                         //registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
-                        registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
-                        registrationResult.put("event", "registerApplication");
+                        //registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
+                        //registrationResult.put("event", "registerApplication");
 
                         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, registrationResult);
                         // keepKallback is used to continue using the same callback to notify about push notifications received
