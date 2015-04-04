@@ -133,7 +133,7 @@ public class NotificationHub extends CordovaPlugin {
       NotificationCompat.Builder builder;
       Context ctx;
 
-        @Override
+        //@Override
         public void onReceive(Context context, Intent intent) {
             ctx = context;
             String nhMessage = intent.getExtras().getString("msg");
