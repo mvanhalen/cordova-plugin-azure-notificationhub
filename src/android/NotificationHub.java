@@ -163,7 +163,7 @@ public class NotificationHub extends CordovaPlugin {
           .setContentTitle("My notification")
           .setContentText("Hello World!");
           // Creates an explicit intent for an Activity in your app
-          Intent resultIntent = new Intent(ctx, PushNotificationReceiver.class));
+          Intent resultIntent = new Intent(ctx, PushNotificationReceiver.class);
           // The stack builder object will contain an artificial back stack for the
           // started Activity.
           // This ensures that navigating backward from the Activity leads out of
