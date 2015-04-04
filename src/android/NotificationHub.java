@@ -144,7 +144,7 @@ public class NotificationHub extends CordovaPlugin {
                 sendNotification(nhMessage);
                 //Set<String> keys = intent.getExtras().keySet();
                 //for (String key : keys) {
-                //    json.put(key, intent.getExtras().get(key));
+                    json.put("msg", bundle.get("msg"));
                 //}
                 PluginResult result = new PluginResult(PluginResult.Status.OK, json);
                 result.setKeepCallback(true);
