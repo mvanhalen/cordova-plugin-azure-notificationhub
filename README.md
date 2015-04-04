@@ -1,7 +1,11 @@
 Windows Azure Notification Hubs plugin for Apache Cordova
 ==================================
-Exposes Windows Azure [Notification Hubs](http://www.windowsazure.com/en-us/services/notification-hubs/) functionality as Apache Cordova Plugin. Support of Windows8, Windows Phone8, iOS and Android.
+Exposes Windows Azure [Notification Hubs](http://www.windowsazure.com/en-us/services/notification-hubs/) functionality as Apache Cordova Plugin for PhoneGap Build. Windows Phone8, iOS and Android.
 
+It's based on: https://github.com/PhonegapProjects/cordova-plugin-azure-notificationhub
+And https://github.com/sgrebnov/cordova-plugin-azure-notificationhub
+
+But uses and updated version of Azure Notification Hubs SDK and should work on iOS8 x64 (pending)
 
 ### Sample usage ###
 
@@ -19,24 +23,13 @@ Exposes Windows Azure [Notification Hubs](http://www.windowsazure.com/en-us/serv
     };;
 
 ### Platform Quirks ###
-**iOS**
+**IOS**
+In progress
 
-On iOS the following code must be manually added to AppDelegate.m in order to have plugin to functional correctly.
-~~~
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidRegisterForRemoteNotifications" object:deviceToken];
-}
+**Android**
+Needs a default icon
+Working on correct notification
 
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFailToRegisterForRemoteNotifications" object:error];
-}
-
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidReceiveRemoteNotification" object:userInfo];
-}
 ~~~~
 ### Copyrights ###
 Licensed under the Apache License, Version 2.0 (the "License");

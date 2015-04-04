@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="msopentech.azure.NotificationHub.Extended"
-        version="0.3.5">
+        version="0.3.6">
 
   <name>Azure Notification Hub</name>
 
@@ -54,20 +54,20 @@
     </config-file>
 
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <!-- <receiver android:name="msopentech.azure.NotificationHub$PushNotificationReceiver"
+      <receiver android:name="msopentech.azure.NotificationHub$PushNotificationReceiver"
           android:permission="com.google.android.c2dm.permission.SEND">
         <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE" />
           <category android:name="$PACKAGE_NAME" />
         </intent-filter>
-      </receiver> -->
-      <receiver android:name="com.microsoft.windowsazure.notifications.NotificationsBroadcastReceiver"
+      </receiver>
+      <!-- <receiver android:name="com.microsoft.windowsazure.notifications.NotificationsBroadcastReceiver"
       android:permission="com.google.android.c2dm.permission.SEND">
       <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE" />
           <category android:name="$PACKAGE_NAME" />
       </intent-filter>
-    </receiver>
+    </receiver> -->
     </config-file>
 
 
