@@ -157,17 +157,25 @@ public class NotificationHub extends CordovaPlugin {
             mNotificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
             PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-                    new Intent(ctx, PushNotificationReceiver.class), 0);
+                    new Intent(ctx, PushNotificationReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(ctx)
                             .setContentTitle("Notification Hub Demo")
                             .setSmallIcon(getDrawableIcon())
-                            .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(msg))
                             .setContentText(msg);
+                            //.setStyle(new NotificationCompat.BigTextStyle()
+                            //.bigText(msg))
+
 
             mBuilder.setContentIntent(contentIntent);
+            mBuilder.setAutoCancel(true);
+            mBuilder.setLights(Color.BLUE, 500, 500);
+            long[] pattern = {500,500,500,500,500,500,500,500,500};
+            mBuilder.setVibrate(pattern);
+            mBuilder.setStyle(new NotificationCompat.InboxStyle());
+            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            mBuilder.setSound(alarmSound);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
         private int getDrawableIcon () {
