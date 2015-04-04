@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.media.RingtoneManager;
+import android.graphics.Color;
 import com.google.android.gms.gcm.*;
 import com.microsoft.windowsazure.messaging.*;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
