@@ -166,7 +166,7 @@ public class NotificationHub extends CordovaPlugin {
                     new NotificationCompat.Builder(ctx)
                             .setContentTitle("Notification Hub Demo")
                             .setSmallIcon(getDrawableIcon())
-                            .setContentText(msg);
+                            .setContentText("Dit is van de intent");
                             //.setStyle(new NotificationCompat.BigTextStyle()
                             //.bigText(msg))
 
