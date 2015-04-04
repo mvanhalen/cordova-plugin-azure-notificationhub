@@ -126,28 +126,26 @@ public class NotificationHub extends CordovaPlugin {
     /**
      * Handles push notifications received.
      */
-    public static class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
+    public class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
 
       public static final int NOTIFICATION_ID = 1;
       private NotificationManager mNotificationManager;
       NotificationCompat.Builder builder;
       Context ctx;
 
-        //@Override
-        public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Bundle bundle) {
             ctx = context;
-            String nhMessage = intent.getExtras().getString("msg");
+            String nhMessage = bundle.getString("msg");
             //bundle.getString("msg");
-
-            sendNotification(nhMessage);
 
             JSONObject json = new JSONObject();
             try {
-
-                Set<String> keys = intent.getExtras().keySet();
-                for (String key : keys) {
-                    json.put(key, intent.getExtras().get(key));
-                }
+                sendNotification(nhMessage);
+                //Set<String> keys = intent.getExtras().keySet();
+                //for (String key : keys) {
+                //    json.put(key, intent.getExtras().get(key));
+                //}
                 PluginResult result = new PluginResult(PluginResult.Status.OK, json);
                 result.setKeepCallback(true);
                 NotificationHub.getCallbackContext().sendPluginResult(result);
@@ -172,10 +170,10 @@ public class NotificationHub extends CordovaPlugin {
 
 
             mBuilder.setContentIntent(contentIntent);
-            //mBuilder.setAutoCancel(true);
+            mBuilder.setAutoCancel(true);
             //mBuilder.setLights(Color.BLUE, 500, 500);
-            //long[] pattern = {500,500,500,500,500,500,500,500,500};
-            //mBuilder.setVibrate(pattern);
+            long[] pattern = {500,500,500,500,500,500,500,500,500};
+            mBuilder.setVibrate(pattern);
             mBuilder.setStyle(new NotificationCompat.InboxStyle());
             //Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             //mBuilder.setSound(alarmSound);
