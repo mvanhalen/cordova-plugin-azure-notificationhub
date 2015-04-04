@@ -126,7 +126,7 @@ public class NotificationHub extends CordovaPlugin {
     /**
      * Handles push notifications received.
      */
-    public class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
+    public static class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
 
       public static final int NOTIFICATION_ID = 1;
       private NotificationManager mNotificationManager;
@@ -139,12 +139,12 @@ public class NotificationHub extends CordovaPlugin {
             String nhMessage = bundle.getString("msg");
             //bundle.getString("msg");
 
+            sendNotification(nhMessage);
             JSONObject json = new JSONObject();
             try {
-                sendNotification(nhMessage);
                 //Set<String> keys = intent.getExtras().keySet();
                 //for (String key : keys) {
-                    json.put("msg", bundle.get("msg"));
+                json.put("msg", bundle.get("msg"));
                 //}
                 PluginResult result = new PluginResult(PluginResult.Status.OK, json);
                 result.setKeepCallback(true);
@@ -155,30 +155,36 @@ public class NotificationHub extends CordovaPlugin {
         }
 
         private void sendNotification(String msg) {
-            mNotificationManager = (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-                    new Intent(ctx, PushNotificationReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
+          NotificationCompat.Builder mBuilder =
+          new NotificationCompat.Builder(ctx)
+          .setSmallIcon(android.R.drawable.notification_icon)
+          .setContentTitle("My notification")
+          .setContentText("Hello World!");
+          // Creates an explicit intent for an Activity in your app
+          Intent resultIntent = new Intent(ctx, PushNotificationReceiver.class));
+          // The stack builder object will contain an artificial back stack for the
+          // started Activity.
+          // This ensures that navigating backward from the Activity leads out of
+          // your application to the Home screen.
+          TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
+          // Adds the back stack for the Intent (but not the Intent itself)
+          stackBuilder.addParentStack(PushNotificationReceiver.class);
+          // Adds the Intent that starts the Activity to the top of the stack
+          stackBuilder.addNextIntent(resultIntent);
+          PendingIntent resultPendingIntent =
+                  stackBuilder.getPendingIntent(
+                      0,
+                      PendingIntent.FLAG_UPDATE_CURRENT
+                  );
+          mBuilder.setContentIntent(resultPendingIntent);
+           mNotificationManager =(NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+          // mId allows you to update the notification later on.
+          mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(ctx)
-                            .setContentTitle("Notification Hub Demo")
-                            .setSmallIcon(getDrawableIcon())
-                            .setContentText("Dit is van de intent");
-                            //.setStyle(new NotificationCompat.BigTextStyle()
-                            //.bigText(msg))
-
-
-            mBuilder.setContentIntent(contentIntent);
-            mBuilder.setAutoCancel(true);
-            //mBuilder.setLights(Color.BLUE, 500, 500);
-            long[] pattern = {500,500,500,500,500,500,500,500,500};
-            mBuilder.setVibrate(pattern);
-            mBuilder.setStyle(new NotificationCompat.InboxStyle());
-            //Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            //mBuilder.setSound(alarmSound);
-            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
+
+
         private int getDrawableIcon () {
            Context context = ctx.getApplicationContext();
            String pkgName  = context.getPackageName();
