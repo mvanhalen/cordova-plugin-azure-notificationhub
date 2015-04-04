@@ -133,7 +133,7 @@ public class NotificationHub extends CordovaPlugin {
       NotificationCompat.Builder builder;
       Context ctx;
 
-        //@Override
+        @Override
         public void onReceive(Context context, Intent intent) {
             ctx = context;
             String nhMessage = intent.getExtras().getString("msg");
@@ -172,13 +172,13 @@ public class NotificationHub extends CordovaPlugin {
 
 
             mBuilder.setContentIntent(contentIntent);
-            mBuilder.setAutoCancel(true);
-            mBuilder.setLights(Color.BLUE, 500, 500);
-            long[] pattern = {500,500,500,500,500,500,500,500,500};
-            mBuilder.setVibrate(pattern);
+            //mBuilder.setAutoCancel(true);
+            //mBuilder.setLights(Color.BLUE, 500, 500);
+            //long[] pattern = {500,500,500,500,500,500,500,500,500};
+            //mBuilder.setVibrate(pattern);
             mBuilder.setStyle(new NotificationCompat.InboxStyle());
-            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            mBuilder.setSound(alarmSound);
+            //Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            //mBuilder.setSound(alarmSound);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
         private int getDrawableIcon () {
