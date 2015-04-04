@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.media.RingtoneManager;
 import android.graphics.Color;
+import android.net.Uri;
 import com.google.android.gms.gcm.*;
 import com.microsoft.windowsazure.messaging.*;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
