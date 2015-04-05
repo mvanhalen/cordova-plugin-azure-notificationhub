@@ -17,7 +17,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import com.google.android.gms.gcm.*;
 import com.microsoft.windowsazure.messaging.*;
-import com.microsoft.windowsazure.notifications.NotificationsManager;
+
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -67,14 +67,14 @@ public class NotificationHub extends CordovaPlugin {
      * Asynchronously registers the device for native notifications.
      */
     @SuppressWarnings("unchecked")
-    private void registerApplication(final String hubName, final String connectionString, final String senderId) {
+    private void registerApplication(final String hubName, final String connectionString, final String senderId,final String userId) {
 
         try {
             final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(cordova.getActivity());
             final com.microsoft.windowsazure.messaging.NotificationHub hub =
                     new com.microsoft.windowsazure.messaging.NotificationHub(hubName, connectionString, cordova.getActivity());
 
-                    NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
+
 
             new AsyncTask() {
                 @Override
@@ -82,16 +82,16 @@ public class NotificationHub extends CordovaPlugin {
                     try {
 
 
-                        String regid = gcm.register(senderId);
-                        hub.register(regid);
-                        //Registration registrationInfo = hub.register(regid);
+                      String gcmId = gcm.register(senderId);
+                      String[] tags = {userId};
+                      NativeRegistration registrationInfo = hub.register(gcmId,tags);
 
-                        JSONObject registrationResult = new JSONObject();
-                        //registrationResult.put("registrationId", registrationInfo.getRegistrationId());
-                        registrationResult.put("registrationId", "OK");
-                        //registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
-                        //registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
-                        //registrationResult.put("event", "registerApplication");
+
+                      JSONObject registrationResult = new JSONObject();
+                      registrationResult.put("registrationId", registrationInfo.getRegistrationId());
+                      registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
+                      registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
+                      registrationResult.put("event", "registerApplication");
 
                         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, registrationResult);
                         // keepKallback is used to continue using the same callback to notify about push notifications received
@@ -129,26 +129,31 @@ public class NotificationHub extends CordovaPlugin {
     /**
      * Handles push notifications received.
      */
-    public static class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
+    public static class PushNotificationReceiver extends android.content.BroadcastReceiver {
 
       public static final int NOTIFICATION_ID = 1;
-      private NotificationManager mNotificationManager;
       NotificationCompat.Builder builder;
       Context ctx;
 
         @Override
-        public void onReceive(Context context, Bundle bundle) {
+        public void onReceive(Context context, Intent intent) {
+          if (NotificationHub.getCallbackContext() == null){
+              return;
+          }
             ctx = context;
-            String nhMessage = bundle.getString("msg");
+            String nhMessage = intent.getExtras().getString("msg");
             //bundle.getString("msg");
 
             sendNotification(nhMessage);
+
+
             JSONObject json = new JSONObject();
             try {
-                //Set<String> keys = intent.getExtras().keySet();
-                //for (String key : keys) {
-                json.put("msg", bundle.get("msg"));
-                //}
+
+                Set<String> keys = intent.getExtras().keySet();
+                for (String key : keys) {
+                    json.put(key, intent.getExtras().get(key));
+                }
                 PluginResult result = new PluginResult(PluginResult.Status.OK, json);
                 result.setKeepCallback(true);
                 NotificationHub.getCallbackContext().sendPluginResult(result);
