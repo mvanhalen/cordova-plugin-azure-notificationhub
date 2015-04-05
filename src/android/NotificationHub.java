@@ -83,7 +83,8 @@ public class NotificationHub extends CordovaPlugin {
 
 
                         String regid = gcm.register(senderId);
-                        Registration registrationInfo = hub.register(regid);
+                        hub.register(regid);
+                        //Registration registrationInfo = hub.register(regid);
 
                         JSONObject registrationResult = new JSONObject();
                         registrationResult.put("registrationId", registrationInfo.getRegistrationId());
@@ -179,7 +180,7 @@ public class NotificationHub extends CordovaPlugin {
                       PendingIntent.FLAG_UPDATE_CURRENT
                   );
           mBuilder.setContentIntent(resultPendingIntent);
-           mNotificationManager =(NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+          mNotificationManager =(NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
           // mId allows you to update the notification later on.
           mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
