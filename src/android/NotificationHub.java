@@ -41,13 +41,14 @@ public class NotificationHub extends CordovaPlugin {
         _callbackContext = callbackContext;
         try {
 
-            if (action.equals("registerApplication")) {
-                String hubName = args.getString(0);
-                String connectionString = args.getString(1);
-                String senderId = args.getString(4);
-                registerApplication(hubName, connectionString, senderId);
-                return true;
-            }
+          if (action.equals("registerApplication")) {
+                  String hubName = args.getString(0);
+                  String connectionString = args.getString(1);
+                  String userId = args.getString(3);
+                  String senderId = args.getString(4);
+                  registerApplication(hubName, connectionString, senderId,userId);
+                  return true;
+          }
 
             if (action.equals("unregisterApplication")) {
                 String hubName = args.getString(0);
@@ -133,6 +134,7 @@ public class NotificationHub extends CordovaPlugin {
 
       public static final int NOTIFICATION_ID = 1;
       NotificationCompat.Builder builder;
+      NotificationManager mNotificationManager;
       Context ctx;
 
         @Override
