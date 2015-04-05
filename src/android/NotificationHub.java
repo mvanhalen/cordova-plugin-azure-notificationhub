@@ -87,7 +87,8 @@ public class NotificationHub extends CordovaPlugin {
                         //Registration registrationInfo = hub.register(regid);
 
                         JSONObject registrationResult = new JSONObject();
-                        registrationResult.put("registrationId", registrationInfo.getRegistrationId());
+                        //registrationResult.put("registrationId", registrationInfo.getRegistrationId());
+                        registrationResult.put("registrationId", "OK");
                         //registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
                         //registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
                         //registrationResult.put("event", "registerApplication");
