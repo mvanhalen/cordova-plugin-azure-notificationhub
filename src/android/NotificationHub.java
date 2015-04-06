@@ -136,7 +136,7 @@ public class NotificationHub extends CordovaPlugin {
     /**
      * Handles push notifications received.
      */
-    public static class PushNotificationReceiver extends android.content.BroadcastReceiver {
+    public static class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
 
       public static final int NOTIFICATION_ID = 1;
       NotificationCompat.Builder builder;
