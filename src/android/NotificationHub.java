@@ -189,7 +189,7 @@ public class NotificationHub extends CordovaPlugin {
                       PendingIntent.FLAG_UPDATE_CURRENT
                   );
           mBuilder.setContentIntent(resultPendingIntent);
-          mNotificationManager =(NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+          mNotificationManager =(NotificationManager)ctx.getSystemService(ctx.NOTIFICATION_SERVICE);
           // mId allows you to update the notification later on.
           mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
