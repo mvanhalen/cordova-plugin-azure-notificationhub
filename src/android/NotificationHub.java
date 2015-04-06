@@ -132,7 +132,7 @@ public class NotificationHub extends CordovaPlugin {
     /**
      * Handles push notifications received.
      */
-    public class PushNotificationReceiver extends NotificationsHandler {
+    public static class PushNotificationReceiver extends NotificationsHandler {
 
       public static final int NOTIFICATION_ID = 1;
       NotificationCompat.Builder builder;
@@ -169,31 +169,22 @@ public class NotificationHub extends CordovaPlugin {
 
         private void sendNotification(String msg) {
 
-          NotificationCompat.Builder mBuilder =
-          new NotificationCompat.Builder(ctx)
-          .setSmallIcon(getDrawableIcon())
-          .setContentTitle("My notification")
-          .setContentText("Hello World!");
-          // Creates an explicit intent for an Activity in your app
-          Intent resultIntent = new Intent(ctx, PushNotificationReceiver.class);
-          // The stack builder object will contain an artificial back stack for the
-          // started Activity.
-          // This ensures that navigating backward from the Activity leads out of
-          // your application to the Home screen.
-          TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
-          // Adds the back stack for the Intent (but not the Intent itself)
-          stackBuilder.addParentStack(PushNotificationReceiver.class);
-          // Adds the Intent that starts the Activity to the top of the stack
-          stackBuilder.addNextIntent(resultIntent);
-          PendingIntent resultPendingIntent =
-                  stackBuilder.getPendingIntent(
-                      0,
-                      PendingIntent.FLAG_UPDATE_CURRENT
-                  );
-          mBuilder.setContentIntent(resultPendingIntent);
-          mNotificationManager =(NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-          // mId allows you to update the notification later on.
-          mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+           mNotificationManager = (NotificationManager)
+                         ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                 PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
+                         new Intent(ctx, PushNotificationReceiver.class), 0);
+
+                 NotificationCompat.Builder mBuilder =
+                         new NotificationCompat.Builder(ctx)
+                                 .setSmallIcon(getDrawableIcon())
+                                 .setContentTitle("Notification Hub Demo")
+                                 .setStyle(new NotificationCompat.BigTextStyle()
+                                         .bigText(msg))
+                                 .setContentText(msg);
+
+                 mBuilder.setContentIntent(contentIntent);
+                 mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
         }
 
