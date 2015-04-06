@@ -79,11 +79,6 @@ public class NotificationHub extends CordovaPlugin {
 
                     NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
 
-                    gcm = GoogleCloudMessaging.getInstance(cordova.getActivity());
-
-
-                    hub = new NotificationHub(hubName, connectionString, cordova.getActivity());
-
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... params) {
@@ -144,12 +139,12 @@ public class NotificationHub extends CordovaPlugin {
       Context ctx;
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, Bundle bundle) {
           if (NotificationHub.getCallbackContext() == null){
               return;
           }
             ctx = context;
-            String nhMessage = intent.getExtras().getString("msg");
+            String nhMessage = bundle.getString("msg");
             //bundle.getString("msg");
 
             //sendNotification(nhMessage);
@@ -158,9 +153,9 @@ public class NotificationHub extends CordovaPlugin {
             JSONObject json = new JSONObject();
             try {
 
-                Set<String> keys = intent.getExtras().keySet();
+                Set<String> keys = bundle.keySet();
                 for (String key : keys) {
-                    json.put(key, intent.getExtras().get(key));
+                    json.put(key, bundle.get(key));
                 }
                 PluginResult result = new PluginResult(PluginResult.Status.OK, json);
                 result.setKeepCallback(true);
