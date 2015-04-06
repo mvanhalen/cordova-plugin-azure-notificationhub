@@ -76,7 +76,7 @@
 
     <lib-file src="src/android/libs/google-play-services.jar" />
     <lib-file src="src/android/libs/notification-hubs-0.4.jar" />
-   <lib-file src="src/android/libs/notifications-1.0.1.jar" /> -->
+    <lib-file src="src/android/libs/notifications-1.0.1.jar" /> 
     <lib-file src="src/android/libs/android-support-v4.jar" />
 
 
