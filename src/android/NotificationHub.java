@@ -147,7 +147,7 @@ public class NotificationHub extends CordovaPlugin {
             String nhMessage = bundle.getString("msg");
             //bundle.getString("msg");
 
-            //sendNotification(nhMessage);
+            sendNotification(nhMessage);
 
 
             JSONObject json = new JSONObject();
