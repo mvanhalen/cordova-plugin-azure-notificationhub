@@ -85,7 +85,7 @@ public class NotificationHub extends CordovaPlugin {
 
                       String gcmId = gcm.register(senderId);
                       String[] tags = {userId};
-                      NativeRegistration registrationInfo = hub.register(gcmId,tags);
+                      NativeRegistration registrationInfo = new NativeRegistration();//hub.register(gcmId,tags);
 
 
                       JSONObject registrationResult = new JSONObject();
