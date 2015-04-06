@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="msopentech.azure.NotificationHub.Extended"
-        version="0.5.3">
+        version="0.5.4">
 
   <name>Azure Notification Hub</name>
 
@@ -53,8 +53,8 @@
       <uses-permission android:name="android.permission.VIBRATE" />
     </config-file>
 
-    <!-- <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <receiver android:name="msopentech.azure.NotificationHub$PushNotificationReceiver"
+     <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <!-- <receiver android:name="msopentech.azure.NotificationHub$PushNotificationReceiver"
           android:permission="com.google.android.c2dm.permission.SEND">
         <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -70,15 +70,12 @@
     </receiver>
     </config-file>
 
-
-
     <source-file src="src/android/NotificationHub.java" target-dir="src/msopentech/azure" />
 
     <lib-file src="src/android/libs/google-play-services.jar" />
     <lib-file src="src/android/libs/notification-hubs-0.4.jar" />
-    <lib-file src="src/android/libs/notifications-1.0.1.jar" /> 
+    <lib-file src="src/android/libs/notifications-1.0.1.jar" />
     <lib-file src="src/android/libs/android-support-v4.jar" />
-
 
   </platform>
   <!-- ios -->
