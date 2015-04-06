@@ -173,7 +173,7 @@ public class NotificationHub extends CordovaPlugin {
                          ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
                  PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-                         new Intent(ctx, PushNotificationReceiver.class), 0);
+                         new Intent(ctx, ctx.getApplicationContext().getClass()), 0);
 
                  NotificationCompat.Builder mBuilder =
                          new NotificationCompat.Builder(ctx)
@@ -184,6 +184,15 @@ public class NotificationHub extends CordovaPlugin {
                                  .setContentText(msg);
 
                  mBuilder.setContentIntent(contentIntent);
+
+                 mBuilder.setAutoCancel(true);
+
+                 long[] pattern = {500,500};//{500,500,500,500,500,500,500,500,500};
+                 mBuilder.setVibrate(pattern);
+
+                 Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                 mBuilder.setSound(alarmSound);
+
                  mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
         }
