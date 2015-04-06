@@ -85,14 +85,15 @@ public class NotificationHub extends CordovaPlugin {
 
                       String gcmId = gcm.register(senderId);
                       String[] tags = {userId};
-                      NativeRegistration registrationInfo = new NativeRegistration();//hub.register(gcmId,tags);
+                      //NativeRegistration registrationInfo = hub.register(gcmId,tags);
 
 
                       JSONObject registrationResult = new JSONObject();
-                      registrationResult.put("registrationId", registrationInfo.getRegistrationId());
-                      registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
-                      registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
-                      registrationResult.put("event", "registerApplication");
+                      registrationResult.put("registrationId", "GCM works");
+                      //registrationResult.put("registrationId", registrationInfo.getRegistrationId());
+                      //registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
+                    //  registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
+                    //  registrationResult.put("event", "registerApplication");
 
                         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, registrationResult);
                         // keepKallback is used to continue using the same callback to notify about push notifications received
