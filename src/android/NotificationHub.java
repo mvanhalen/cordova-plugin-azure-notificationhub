@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
 
+import com.microsoft.windowsazure.notifications.NotificationsHandler;
 
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
@@ -131,7 +132,7 @@ public class NotificationHub extends CordovaPlugin {
     /**
      * Handles push notifications received.
      */
-    public static class PushNotificationReceiver extends com.microsoft.windowsazure.notifications.NotificationsHandler {
+    public class PushNotificationReceiver extends NotificationsHandler {
 
       public static final int NOTIFICATION_ID = 1;
       NotificationCompat.Builder builder;
@@ -140,15 +141,16 @@ public class NotificationHub extends CordovaPlugin {
 
         @Override
         public void onReceive(Context context, Bundle bundle) {
-          if (NotificationHub.getCallbackContext() == null){
-              return;
-          }
+
             ctx = context;
             String nhMessage = bundle.getString("msg");
             //bundle.getString("msg");
 
             sendNotification(nhMessage);
 
+            if (NotificationHub.getCallbackContext() == null){
+                return;
+            }
 
             JSONObject json = new JSONObject();
             try {
@@ -169,7 +171,7 @@ public class NotificationHub extends CordovaPlugin {
 
           NotificationCompat.Builder mBuilder =
           new NotificationCompat.Builder(ctx)
-          //.setSmallIcon(getDrawableIcon())
+          .setSmallIcon(getDrawableIcon())
           .setContentTitle("My notification")
           .setContentText("Hello World!");
           // Creates an explicit intent for an Activity in your app
