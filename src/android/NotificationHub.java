@@ -25,11 +25,13 @@ import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
 
+
+import com.microsoft.windowsazure.notifications.NotificationsManager;
+
 /**
  * Apache Cordova plugin for Windows Azure Notification Hub
  */
 public class NotificationHub extends CordovaPlugin {
-
 
     /**
      * The callback context from which we were invoked.
@@ -75,25 +77,28 @@ public class NotificationHub extends CordovaPlugin {
             final com.microsoft.windowsazure.messaging.NotificationHub hub =
                     new com.microsoft.windowsazure.messaging.NotificationHub(hubName, connectionString, cordova.getActivity());
 
+                    NotificationsManager.handleNotifications(cordova.getActivity(), senderId, PushNotificationReceiver.class);
 
+                    gcm = GoogleCloudMessaging.getInstance(cordova.getActivity());
+
+
+                    hub = new NotificationHub(hubName, connectionString, cordova.getActivity());
 
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... params) {
                     try {
 
-
-                      String gcmId = gcm.register(senderId);
                       String[] tags = {userId};
-                      //NativeRegistration registrationInfo = hub.register(gcmId,tags);
+                      String regid = gcm.register(senderId);
+                      Registration registrationInfo = hub.register(regid);
 
 
                       JSONObject registrationResult = new JSONObject();
-                      registrationResult.put("registrationId", "GCM works");
-                      //registrationResult.put("registrationId", registrationInfo.getRegistrationId());
+                      registrationResult.put("registrationId", registrationInfo.getRegistrationId());
                       //registrationResult.put("channelUri", registrationInfo.getGCMRegistrationId());
-                    //  registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
-                    //  registrationResult.put("event", "registerApplication");
+                      //registrationResult.put("notificationHubPath", registrationInfo.getNotificationHubPath());
+                      registrationResult.put("event", "registerApplication");
 
                         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, registrationResult);
                         // keepKallback is used to continue using the same callback to notify about push notifications received
@@ -147,7 +152,7 @@ public class NotificationHub extends CordovaPlugin {
             String nhMessage = intent.getExtras().getString("msg");
             //bundle.getString("msg");
 
-            sendNotification(nhMessage);
+            //sendNotification(nhMessage);
 
 
             JSONObject json = new JSONObject();
