@@ -169,7 +169,7 @@ public class NotificationHub extends CordovaPlugin {
 
           NotificationCompat.Builder mBuilder =
           new NotificationCompat.Builder(ctx)
-          .setSmallIcon(getDrawableIcon())
+          //.setSmallIcon(getDrawableIcon())
           .setContentTitle("My notification")
           .setContentText("Hello World!");
           // Creates an explicit intent for an Activity in your app
