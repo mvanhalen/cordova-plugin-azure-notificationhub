@@ -144,9 +144,10 @@ public class NotificationHub extends CordovaPlugin {
 
             ctx = context;
             String nhMessage = bundle.getString("msg");
+            String nhTitle = bundle.getString("title");
             //bundle.getString("msg");
 
-            sendNotification(nhMessage);
+            sendNotification(nhMessage,nhTitle);
 
             if (NotificationHub.getCallbackContext() == null){
                 return;
@@ -167,18 +168,18 @@ public class NotificationHub extends CordovaPlugin {
             }
         }
 
-        private void sendNotification(String msg) {
+        private void sendNotification(String msg,String title) {
 
            mNotificationManager = (NotificationManager)
                          ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                 PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-                         new Intent(ctx, ctx.getApplicationContext().getClass()), 0);
+                 PendingIntent contentIntent = PendingIntent.getActivity(ctx.getApplicationContext(), 0,
+                         new Intent(ctx.getApplicationContext(), ctx.getApplicationContext().getClass()), 0);
 
                  NotificationCompat.Builder mBuilder =
                          new NotificationCompat.Builder(ctx)
                                  .setSmallIcon(getDrawableIcon())
-                                 .setContentTitle("Notification Hub Demo")
+                                 .setContentTitle(title)
                                  .setStyle(new NotificationCompat.BigTextStyle()
                                          .bigText(msg))
                                  .setContentText(msg);
