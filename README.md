@@ -22,13 +22,16 @@ But uses and updated version of Azure Notification Hubs SDK and should work on i
         console.log("Push Notification received: " + msg);
     };;
 
+For debugging you can use the built in debug option in Azure Notification Hubs in the portal website 
+
 ### Platform Quirks ###
 **IOS**
 In progress
 
 **Android**
-Needs a default icon
-Working on correct notification
+Needs a default icon in common resolutions
+
+Notification works expects a title and msg (message) field in the json
 
 ~~~~
 ### Copyrights ###
