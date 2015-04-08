@@ -24,9 +24,9 @@ import android.app.PendingIntent;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
+import android.content.pm.PackageManager;
 
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
-
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
 /**
@@ -173,8 +173,12 @@ public class NotificationHub extends CordovaPlugin {
            mNotificationManager = (NotificationManager)
                          ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
+                 PackageManager pm = ctx.getPackageManager(); 
+
                  PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-                         new Intent(ctx, ctx.getApplicationContext().getClass()), 0);
+                 pm.getLaunchIntentForPackage(ctx.getApplicationContext().getPackageName()), 0);
+
+                    //new Intent(ctx, ctx.getApplicationContext().getClass())
 
                  NotificationCompat.Builder mBuilder =
                          new NotificationCompat.Builder(ctx)
