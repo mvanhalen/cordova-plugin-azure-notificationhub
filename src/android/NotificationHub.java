@@ -87,7 +87,7 @@ public class NotificationHub extends CordovaPlugin {
 
                       String[] tags = {userId};
                       String regid = gcm.register(senderId);
-                      Registration registrationInfo = hub.register(regid);
+                      Registration registrationInfo = hub.register(regid,tags);
 
 
                       JSONObject registrationResult = new JSONObject();
@@ -174,7 +174,7 @@ public class NotificationHub extends CordovaPlugin {
                          ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
                  PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-                         new Intent(ctx.getApplicationContext(), ctx.getApplicationContext().getClass()), 0);
+                         new Intent(ctx, ctx.getApplicationContext().getClass()), 0);
 
                  NotificationCompat.Builder mBuilder =
                          new NotificationCompat.Builder(ctx)
