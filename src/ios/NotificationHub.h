@@ -17,6 +17,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Cordova/CDVPlugin.h>
+#import <WindowsAzureMessaging/WindowsAzureMessaging.h>
 
 // Exposes Windows Azure Notification Hubs functionality (Apache Cordova Plugin).
 // http://msdn.microsoft.com/en-us/library/microsoft.windowsazure.messaging.notificationhub.notificationhub.aspx
@@ -37,4 +38,3 @@
 - (void)didRegisterUserNotificationSettings:(NSNotification *)notif;
 
 @end
-
