@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="msopentech.azure.NotificationHub.Extended"
-        version="0.6.7">
+        version="0.6.8">
 
   <name>Azure Notification Hub</name>
 
@@ -85,7 +85,9 @@
         <param name="ios-package" value="NotificationHub" />
       </feature>
     </config-file>
+    <header-file src="src/ios/AppDelegate+NotificationHub.h" />
     <header-file src="src/ios/NotificationHub.h" />
+    <source-file src="src/ios/AppDelegate+NotificationHub.m" />
     <source-file src="src/ios/NotificationHub.m" />
     <framework src="src/ios/WindowsAzureMessaging.framework" custom="true" />
   </platform>
