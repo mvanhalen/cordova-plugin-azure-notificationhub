@@ -17,7 +17,6 @@
 
 #import <Foundation/Foundation.h>
 #import <Cordova/CDVPlugin.h>
-#import <WindowsAzureMessaging/WindowsAzureMessaging.h>
 
 // Exposes Windows Azure Notification Hubs functionality (Apache Cordova Plugin).
 // http://msdn.microsoft.com/en-us/library/microsoft.windowsazure.messaging.notificationhub.notificationhub.aspx
@@ -26,6 +25,7 @@
 @property NSString *callbackId;
 @property NSString *notificationHubPath;
 @property NSString *connectionString;
+@property NSString *userId;
 
 // Asynchronously registers the device for native notifications.
 - (void)registerApplication:(CDVInvokedUrlCommand*)command;
@@ -35,6 +35,5 @@
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSNotification *)notif;
 - (void)didFailToRegisterForRemoteNotificationsWithError:(NSNotification *)notif;
 - (void)didReceiveRemoteNotification:(NSNotification *)notif;
-- (void)didRegisterUserNotificationSettings:(NSNotification *)notif;
 
 @end

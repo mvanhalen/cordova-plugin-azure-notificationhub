@@ -16,7 +16,7 @@
  */
 
 #import "NotificationHub.h"
-
+#import <WindowsAzureMessaging/WindowsAzureMessaging.h>
 
 @implementation NotificationHub {
 
@@ -34,17 +34,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveRemoteNotification:)
                                                  name:@"UIApplicationDidReceiveRemoteNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didRegisterUserNotificationSettings:)
-                                                 name:CDVRemoteNotification object:nil];
 }
 
 - (void)registerApplication:(CDVInvokedUrlCommand*)command
 {
     self.notificationHubPath = [command.arguments objectAtIndex:0];
     self.connectionString = [command.arguments objectAtIndex:1];
-
+    self.userId = [command.arguments objectAtIndex:3];
     self.callbackId = command.callbackId;
+
 
     if (IsAtLeastiOSVersion(@"8.0")) {
         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert) categories:nil];
@@ -73,10 +71,6 @@
     }];
 
 }
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
-{
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-}
 
 - (void) didRegisterForRemoteNotificationsWithDeviceToken:(NSNotification *)notif
 {
@@ -86,8 +80,11 @@
 
     SBNotificationHub* hub = [[SBNotificationHub alloc] initWithConnectionString:
                               self.connectionString notificationHubPath:self.notificationHubPath];
+    NSArray* categories1 = [NSArray arrayWithObject: self.userId];
 
-    [hub registerNativeWithDeviceToken:deviceToken tags:nil completion:^(NSError* error) {
+    NSSet* categories = [[NSSet alloc] initWithArray:categories1];
+
+    [hub registerNativeWithDeviceToken:deviceToken tags:categories completion:^(NSError* error) {
         if (error != nil) {
             [self failWithError:error];
             return;
@@ -96,33 +93,6 @@
         // http://stackoverflow.com/a/1587441
         NSString *channelUri = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
         channelUri = [channelUri stringByReplacingOccurrencesOfString:@" " withString:@""];
-
-        // create callback argument
-        NSMutableDictionary* registration = [NSMutableDictionary dictionaryWithCapacity:4];
-        [registration setObject:@"registerApplication" forKey:@"event"];
-        [registration setObject:channelUri forKey:@"registrationId"]; // TODO: find the way to report registrationId
-        [registration setObject:channelUri forKey:@"channelUri"];
-        [registration setObject:self.notificationHubPath forKey:@"notificationHubPath"];
-
-        [self reportResult: registration keepCallback:[NSNumber numberWithInteger: TRUE]];
-    }];
-}
-
-- (void) didRegisterForRemoteNotificationsWithDeviceTokenCordova:(NSNotification *)notif
-{
-    if (self.connectionString == nil || self.notificationHubPath == nil) return;
-
-    NSString *channelUri  = notif.object;
-    NSData *deviceToken  = [channelUri dataUsingEncoding:NSUTF8StringEncoding];
-
-    SBNotificationHub* hub = [[SBNotificationHub alloc] initWithConnectionString:
-                              self.connectionString notificationHubPath:self.notificationHubPath];
-
-    [hub registerNativeWithDeviceToken:deviceToken tags:nil completion:^(NSError* error) {
-        if (error != nil) {
-            [self failWithError:error];
-            return;
-        }
 
         // create callback argument
         NSMutableDictionary* registration = [NSMutableDictionary dictionaryWithCapacity:4];
