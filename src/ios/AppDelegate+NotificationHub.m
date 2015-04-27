@@ -24,7 +24,7 @@ static char launchNotificationKey;
 + (void)load
 {
     Method original, swizzled;
-    
+
     original = class_getInstanceMethod(self, @selector(init));
     swizzled = class_getInstanceMethod(self, @selector(swizzled_init));
     method_exchangeImplementations(original, swizzled);
@@ -34,7 +34,7 @@ static char launchNotificationKey;
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createNotificationChecker:)
                                                  name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
-	
+
         // This actually calls the original init method over in AppDelegate. Equivilent to calling super
         // on an overrided method, this is not recursive, although it appears that way. neat huh?
 	return [self swizzled_init];
@@ -44,13 +44,17 @@ static char launchNotificationKey;
     // to process notifications in cold-start situations
 - (void)createNotificationChecker:(NSNotification *)notification
 {
-	
+
     if (notification)
 	{
     NSDictionary *launchOptions = [notification userInfo];
     if (launchOptions)
     self.launchNotification = [launchOptions objectForKey: @"UIApplicationLaunchOptionsRemoteNotificationKey"];
 	}
+}
+
+-(void)application:(UIApplication *)application didRegisterUserNotificationSettings:(NSData *) deviceToken {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidRegisterForRemoteNotifications" object:deviceToken];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -66,8 +70,8 @@ static char launchNotificationKey;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    
-    
+
+
 }
 
     // The accessors use an Associative Reference since you can't define a iVar in a category
