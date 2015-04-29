@@ -22,12 +22,10 @@ Create some javascript in the Device On Ready event of PhoneGap/Cordava
         console.log("Registration successful");
     });
 
-Reference the plugin in the Phonegap Config XML as
+Reference the plugin in the Phonegap Config XML as mentioned on https://build.phonegap.com/plugins/2810
 
-<gap:plugin name="msopentech.azure.notificationhub.extended" />
 
-Push messages are generated/triggered  automatically in the native code part. No need to do that via Javascript.
-
+Push messages are generated/triggered automatically in the native code parts. No need to do that via Javascript.
 
 For debugging you can use the built in debug option in Azure Notification Hubs in the portal website
 
@@ -39,9 +37,11 @@ Expects a message in the format {"aps":{"alert":"Some Message"}}
 Second registration attempt might generat error. But it is already registered.
 
 **Android**
+Working
 Needs a default icon in common resolutions
 
-Notification works expects a title and msg (message) field in the json
+Notification expects a title and msg (message) field in the json like:
+{"data":{"title":"some title","msg":"Notification Hub test notification"}}
 
 ~~~~
 ### Copyrights ###
